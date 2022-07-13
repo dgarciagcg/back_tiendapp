@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ProductoController extends Controller
@@ -56,7 +57,12 @@ class ProductoController extends Controller
 
     public function traerProductos()
     {
-        $productos = Producto::get();
+        $productos = DB::table('productos')
+            ->join('marcas', 'productos.id_marca', '=', 'marcas.id_marca')
+            ->get([
+                'productos.*',
+                'marcas.nombre as nombreMarca'
+            ]);
         return response()->json($productos);
     }
 
